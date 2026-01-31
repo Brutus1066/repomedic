@@ -23,7 +23,7 @@
 | **Secret detection** | ✅ | ❌ | ❌ |
 | **SARIF output** | ✅ | ✅ | ❌ |
 | **Cross-platform** | ✅ | ✅ | ✅ |
-| **Binary size** | ~475KB | ~200MB | ~2MB |
+| **Binary size** | ~450-650KB | ~200MB | ~2MB |
 | **Scan speed** | <100ms | ~2s | ~500ms |
 
 ---
