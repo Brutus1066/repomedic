@@ -1,0 +1,23 @@
+[package]
+name = "repomedic"
+version = "0.1.0"
+edition = "2021"
+authors = ["LazyFrog <contact@kindware.dev>"]
+description = "Fast, zero-dependency repository health scanner - scores repos, detects issues, generates missing files"
+license = "MIT"
+repository = "https://github.com/Brutus1066/repomedic"
+homepage = "https://kindware.dev"
+keywords = ["git", "repository", "scanner", "health", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

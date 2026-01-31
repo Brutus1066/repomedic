@@ -1,0 +1,18 @@
+# Rust
+target/
+
+# IDE
+.idea/
+.vscode/
+.claude/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Private
+CLAUDE.md
+*.zip
