@@ -288,6 +288,10 @@ struct Cli {
     /// Exit with code 2 on warnings (not just errors)
     #[arg(long, global = true)]
     fail_on_warning: bool,
+
+    /// Output only the numeric health score (0-100) for scripting
+    #[arg(long, global = true)]
+    score_only: bool,
 }
 
 #[derive(Subcommand)]
@@ -403,6 +407,19 @@ fn main() {
             process::exit(1);
         }
     };
+
+    // Handle --score-only: just print the number and exit
+    if cli.score_only {
+        let score = report::calculate_score(&result);
+        println!("{}", score);
+        if report::has_errors(&result) {
+            process::exit(2);
+        }
+        if cli.fail_on_warning && report::has_warnings(&result) {
+            process::exit(2);
+        }
+        return;
+    }
 
     let use_color = report::use_color(cli.no_color);
 

@@ -136,6 +136,7 @@ RepoMedic calculates a **0-100 health score** based on:
 | `-v, --verbose` | Show scan stats and timing |
 | `--no-color` | Disable colored output |
 | `--fail-on-warning` | Exit 2 on warnings (not just errors) |
+| `--score-only` | Output only numeric score (0-100) for scripting |
 
 ## Generate Options
 
