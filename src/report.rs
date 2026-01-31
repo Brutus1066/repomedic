@@ -176,6 +176,36 @@ pub fn collect_issues(result: &ScanResult) -> Vec<Issue> {
     if !result.has_tests && !result.languages.is_empty() {
         issues.push(Issue::info("No test directory detected"));
     }
+    // Check for missing lock files when manifest exists
+    let lock_checks: &[(&str, &[&str], &str)] = &[
+        ("package.json", &["package-lock.json", "yarn.lock", "pnpm-lock.yaml"], "npm/yarn/pnpm lock file"),
+        ("Pipfile", &["Pipfile.lock"], "Pipfile.lock"),
+        ("Gemfile", &["Gemfile.lock"], "Gemfile.lock"),
+        ("composer.json", &["composer.lock"], "composer.lock"),
+        ("go.mod", &["go.sum"], "go.sum"),
+        ("mix.exs", &["mix.lock"], "mix.lock"),
+    ];
+    for (manifest, locks, desc) in lock_checks {
+        if result.dependency_files.iter().any(|f| f == *manifest) {
+            let has_lock = locks.iter().any(|l| result.dependency_files.iter().any(|f| f == *l));
+            if !has_lock {
+                issues.push(Issue::warning(format!(
+                    "Missing {}: found {} but no lock file (reproducible builds)",
+                    desc, manifest
+                )));
+            }
+        }
+    }
+    // Cargo.lock check: only warn for binaries, not libraries
+    if result.dependency_files.iter().any(|f| f == "Cargo.toml") {
+        let has_lock = result.dependency_files.iter().any(|f| f == "Cargo.lock");
+        if !has_lock {
+            // Info-level since libraries often don't commit Cargo.lock
+            issues.push(Issue::info(
+                "No Cargo.lock found (consider committing for binary/app projects)"
+            ));
+        }
+    }
     for f in &result.large_files {
         issues.push(Issue::warning(format!("Large file detected (>5MB): {}", f)));
     }
@@ -231,6 +261,7 @@ pub fn to_sarif(result: &ScanResult, path: &Path) -> String {
         ("missing-editorconfig", "Missing .editorconfig", "warning"),
         ("no-ci", "No CI/CD configuration detected", "warning"),
         ("no-tests", "No test directory detected", "warning"),
+        ("missing-lock-file", "Missing lock file for reproducible builds", "warning"),
         ("large-file", "Large file detected (>5MB)", "warning"),
         ("potential-secret", "Potential secret detected", "error"),
     ];
@@ -245,6 +276,7 @@ pub fn to_sarif(result: &ScanResult, path: &Path) -> String {
             else if m.contains("CONTRIBUTING") { "missing-contributing" } else if m.contains("CODE_OF_CONDUCT") { "missing-code-of-conduct" }
             else if m.contains("SECURITY") { "missing-security" } else if m.contains(".editorconfig") { "missing-editorconfig" }
             else if m.contains("CI/CD") { "no-ci" } else if m.contains("test") { "no-tests" }
+            else if m.contains("lock file") || m.contains("Cargo.lock") { "missing-lock-file" }
             else if m.contains("Large file") { "large-file" } else if m.contains("secret") { "potential-secret" } else { return None };
         let level = match issue.severity { Severity::Error => "error", Severity::Warning => "warning", Severity::Info => "note" };
         Some(serde_json::json!({ "ruleId": rule_id, "level": level, "message": { "text": &issue.message },
