@@ -21,6 +21,7 @@
 | **Health score** | ✅ | ❌ | ❌ |
 | **Generate missing files** | ✅ | ❌ | ❌ |
 | **Secret detection** | ✅ | ❌ | ❌ |
+| **Lock file checks** | ✅ | ❌ | ❌ |
 | **SARIF output** | ✅ | ✅ | ❌ |
 | **Cross-platform** | ✅ | ✅ | ✅ |
 | **Binary size** | ~450-650KB | ~200MB | ~2MB |
