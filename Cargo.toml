@@ -1,6 +1,6 @@
 [package]
 name = "repomedic"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["LazyFrog <contact@kindware.dev>"]
 description = "Fast, zero-dependency repository health scanner - scores repos, detects issues, generates missing files"

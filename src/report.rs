@@ -178,7 +178,11 @@ pub fn collect_issues(result: &ScanResult) -> Vec<Issue> {
     }
     // Check for missing lock files when manifest exists
     let lock_checks: &[(&str, &[&str], &str)] = &[
-        ("package.json", &["package-lock.json", "yarn.lock", "pnpm-lock.yaml"], "npm/yarn/pnpm lock file"),
+        (
+            "package.json",
+            &["package-lock.json", "yarn.lock", "pnpm-lock.yaml"],
+            "npm/yarn/pnpm lock file",
+        ),
         ("Pipfile", &["Pipfile.lock"], "Pipfile.lock"),
         ("Gemfile", &["Gemfile.lock"], "Gemfile.lock"),
         ("composer.json", &["composer.lock"], "composer.lock"),
@@ -187,7 +191,9 @@ pub fn collect_issues(result: &ScanResult) -> Vec<Issue> {
     ];
     for (manifest, locks, desc) in lock_checks {
         if result.dependency_files.iter().any(|f| f == *manifest) {
-            let has_lock = locks.iter().any(|l| result.dependency_files.iter().any(|f| f == *l));
+            let has_lock = locks
+                .iter()
+                .any(|l| result.dependency_files.iter().any(|f| f == *l));
             if !has_lock {
                 issues.push(Issue::warning(format!(
                     "Missing {}: found {} but no lock file (reproducible builds)",
@@ -202,7 +208,7 @@ pub fn collect_issues(result: &ScanResult) -> Vec<Issue> {
         if !has_lock {
             // Info-level since libraries often don't commit Cargo.lock
             issues.push(Issue::info(
-                "No Cargo.lock found (consider committing for binary/app projects)"
+                "No Cargo.lock found (consider committing for binary/app projects)",
             ));
         }
     }
@@ -261,7 +267,11 @@ pub fn to_sarif(result: &ScanResult, path: &Path) -> String {
         ("missing-editorconfig", "Missing .editorconfig", "warning"),
         ("no-ci", "No CI/CD configuration detected", "warning"),
         ("no-tests", "No test directory detected", "warning"),
-        ("missing-lock-file", "Missing lock file for reproducible builds", "warning"),
+        (
+            "missing-lock-file",
+            "Missing lock file for reproducible builds",
+            "warning",
+        ),
         ("large-file", "Large file detected (>5MB)", "warning"),
         ("potential-secret", "Potential secret detected", "error"),
     ];
