@@ -200,7 +200,7 @@ fn print_help_detailed(color: bool) {
 {}MORE INFO:{}
   Website:  https://kindware.dev
   GitHub:   https://github.com/Brutus1066/repomedic
-  Author:   LazyFrog <contact@kindware.dev>
+  Author:   LazyFrog <support@kindware.dev>
 "#,
         cyan,
         VERSION,
@@ -252,7 +252,7 @@ enum OutputFormat {
 
 #[derive(Parser)]
 #[command(name = "repomedic")]
-#[command(author = "LazyFrog <contact@kindware.dev>")]
+#[command(author = "LazyFrog <support@kindware.dev>")]
 #[command(version = VERSION)]
 #[command(about = "Local Git repository scanner and hygiene tool")]
 struct Cli {

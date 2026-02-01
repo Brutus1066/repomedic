@@ -2,7 +2,7 @@
 name = "repomedic"
 version = "0.1.2"
 edition = "2021"
-authors = ["LazyFrog <contact@kindware.dev>"]
+authors = ["LazyFrog <support@kindware.dev>"]
 description = "Fast, zero-dependency repository health scanner - scores repos, detects issues, generates missing files"
 license = "MIT"
 repository = "https://github.com/Brutus1066/repomedic"
