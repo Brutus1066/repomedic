@@ -218,17 +218,34 @@ repomedic -q || exit 1
 
 ## Screenshots
 
-<details>
-<summary>📊 Export Report</summary>
+### Usage Examples
 <p align="center">
-  <img src="screenshots/export-txt.png" alt="Export Text Report" width="600">
+  <img src="screenshots/examples.png" alt="RepoMedic Examples with Banner" width="600">
+</p>
+
+### Watch Mode
+<p align="center">
+  <img src="screenshots/watch-mode.png" alt="Watch Mode" width="600">
+</p>
+
+<details>
+<summary>📖 Help Output</summary>
+<p align="center">
+  <img src="screenshots/help-output.png" alt="Help Output" width="600">
 </p>
 </details>
 
 <details>
-<summary>📖 Detailed Info</summary>
+<summary>📊 JSON Output</summary>
 <p align="center">
-  <img src="screenshots/info.png" alt="Info Command" width="600">
+  <img src="screenshots/json-output.png" alt="JSON Output" width="400">
+</p>
+</details>
+
+<details>
+<summary>📊 Export Report</summary>
+<p align="center">
+  <img src="screenshots/export-txt.png" alt="Export Text Report" width="600">
 </p>
 </details>
 
