@@ -133,6 +133,7 @@ RepoMedic calculates a **0-100 health score** based on:
 | Flag | Description |
 |------|-------------|
 | `-f, --format` | Output: `console`, `json`, `markdown`, `sarif` |
+| `--json` | Shorthand for `--format json` (CI/CD friendly) |
 | `-q, --quiet` | Exit code only (for scripts) |
 | `-v, --verbose` | Show scan stats and timing |
 | `--no-color` | Disable colored output |

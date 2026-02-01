@@ -302,6 +302,10 @@ struct Cli {
     /// Watch interval in seconds (default: 30)
     #[arg(long, default_value = "30", global = true)]
     interval: u64,
+
+    /// Shorthand for --format json (useful for CI/CD scripting)
+    #[arg(long, global = true)]
+    json: bool,
 }
 
 #[derive(Subcommand)]
@@ -525,6 +529,20 @@ fn main() {
     if cli.score_only {
         let score = report::calculate_score(&result);
         println!("{}", score);
+        if report::has_errors(&result) {
+            process::exit(2);
+        }
+        if cli.fail_on_warning && report::has_warnings(&result) {
+            process::exit(2);
+        }
+        return;
+    }
+
+    // Handle --json shorthand: output JSON and exit
+    if cli.json {
+        if !cli.quiet {
+            println!("{}", report::to_json(&result, &path));
+        }
         if report::has_errors(&result) {
             process::exit(2);
         }
