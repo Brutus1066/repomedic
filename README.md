@@ -22,6 +22,7 @@
 | **Generate missing files** | ✅ | ❌ | ❌ |
 | **Secret detection** | ✅ | ❌ | ❌ |
 | **Lock file checks** | ✅ | ❌ | ❌ |
+| **Watch mode** | ✅ | ❌ | ❌ |
 | **SARIF output** | ✅ | ✅ | ❌ |
 | **Cross-platform** | ✅ | ✅ | ✅ |
 | **Binary size** | ~450-650KB | ~200MB | ~2MB |
@@ -137,6 +138,8 @@ RepoMedic calculates a **0-100 health score** based on:
 | `--no-color` | Disable colored output |
 | `--fail-on-warning` | Exit 2 on warnings (not just errors) |
 | `--score-only` | Output only numeric score (0-100) for scripting |
+| `-w, --watch` | Continuously monitor repository health |
+| `--interval <sec>` | Watch refresh interval (default: 30s) |
 
 ## Generate Options
 

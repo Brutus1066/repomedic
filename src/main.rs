@@ -5,6 +5,8 @@ mod scanner;
 use clap::{Parser, Subcommand, ValueEnum};
 use std::path::PathBuf;
 use std::process;
+use std::thread;
+use std::time::Duration;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -292,6 +294,14 @@ struct Cli {
     /// Output only the numeric health score (0-100) for scripting
     #[arg(long, global = true)]
     score_only: bool,
+
+    /// Watch mode: continuously monitor repository health
+    #[arg(long, short = 'w', global = true)]
+    watch: bool,
+
+    /// Watch interval in seconds (default: 30)
+    #[arg(long, default_value = "30", global = true)]
+    interval: u64,
 }
 
 #[derive(Subcommand)]
@@ -384,6 +394,103 @@ enum Commands {
     },
 }
 
+/// Clear terminal screen (cross-platform)
+fn clear_screen() {
+    if cfg!(windows) {
+        // Windows: use ANSI escape (works in modern terminals)
+        print!("\x1b[2J\x1b[1;1H");
+    } else {
+        // Unix: ANSI escape
+        print!("\x1b[2J\x1b[1;1H");
+    }
+}
+
+/// Run continuous watch mode
+fn run_watch_mode(cli: &Cli, path: &std::path::Path) {
+    let use_color = report::use_color(cli.no_color);
+    let interval = Duration::from_secs(cli.interval);
+
+    let cyan = if use_color { "\x1b[36m" } else { "" };
+    let green = if use_color { "\x1b[32m" } else { "" };
+    let yellow = if use_color { "\x1b[33m" } else { "" };
+    let reset = if use_color { "\x1b[0m" } else { "" };
+
+    println!("{}RepoMedic Watch Mode{}", cyan, reset);
+    println!("{}Monitoring:{} {}", green, reset, report::clean_path(path));
+    println!(
+        "{}Interval:{} {}s (Ctrl+C to stop)\n",
+        green, reset, cli.interval
+    );
+
+    loop {
+        let result = match scanner::scan(path) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("{}Error:{} {}", yellow, reset, e);
+                thread::sleep(interval);
+                continue;
+            }
+        };
+
+        // Get current timestamp
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+        let hours = (now % 86400) / 3600;
+        let minutes = (now % 3600) / 60;
+        let seconds = now % 60;
+
+        clear_screen();
+
+        // Print header
+        println!(
+            "{}╔═══════════════════════════════════════════════════════════════╗{}",
+            cyan, reset
+        );
+        println!(
+            "{}║  {}REPOMEDIC WATCH MODE{}                                          ║{}",
+            cyan, green, cyan, reset
+        );
+        println!(
+            "{}╚═══════════════════════════════════════════════════════════════╝{}",
+            cyan, reset
+        );
+        println!();
+
+        if cli.score_only {
+            let score = report::calculate_score(&result);
+            let grade = report::score_grade(score);
+            let score_color = if score >= 80 {
+                green
+            } else if score >= 60 {
+                yellow
+            } else {
+                "\x1b[31m"
+            };
+            println!(
+                "{}Score:{} {}{}{} ({})",
+                green, reset, score_color, score, reset, grade
+            );
+        } else {
+            report::print_summary(&result, false, cli.verbose, use_color);
+        }
+
+        println!();
+        println!(
+            "{}─────────────────────────────────────────────────────────────────{}",
+            cyan, reset
+        );
+        println!(
+            "{}Last update:{} {:02}:{:02}:{:02} UTC  {}│{}  {}Next refresh:{} {}s",
+            green, reset, hours, minutes, seconds, cyan, reset, green, reset, cli.interval
+        );
+        println!("{}Press Ctrl+C to stop{}", yellow, reset);
+
+        thread::sleep(interval);
+    }
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -398,6 +505,12 @@ fn main() {
     if !path.is_dir() {
         eprintln!("Error: '{}' is not a directory", report::clean_path(&path));
         process::exit(1);
+    }
+
+    // Handle --watch mode: continuous monitoring loop
+    if cli.watch {
+        run_watch_mode(&cli, &path);
+        return;
     }
 
     let result = match scanner::scan(&path) {
