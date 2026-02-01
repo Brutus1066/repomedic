@@ -108,10 +108,6 @@ RepoMedic calculates a **0-100 health score** based on:
 
 **Grades:** A (90-100), B (80-89), C (70-79), D (60-69), F (<60)
 
-<p align="center">
-  <img src="screenshots/info.png" alt="RepoMedic Info" width="600">
-</p>
-
 ---
 
 ## Commands
