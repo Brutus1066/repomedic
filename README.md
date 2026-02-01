@@ -1,6 +1,7 @@
 # RepoMedic
 
 [![CI](https://github.com/Brutus1066/repomedic/actions/workflows/ci.yml/badge.svg)](https://github.com/Brutus1066/repomedic/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/repomedic?style=flat-square)](https://crates.io/crates/repomedic)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 
