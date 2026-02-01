@@ -8,7 +8,7 @@
 **Fast, zero-dependency repository health scanner** — scans repos in milliseconds, generates missing files, outputs JSON/SARIF for CI/CD.
 
 <p align="center">
-  <img src="screenshots/examples.png" alt="RepoMedic Examples" width="600">
+  <img src="screenshots/hero.png" alt="RepoMedic" width="600">
 </p>
 
 ---
